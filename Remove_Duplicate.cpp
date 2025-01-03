@@ -1,93 +1,76 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
+
 class Node
 {
     public:
     int val;
     Node* n_pointer;
 
-    Node(int val)
+    Node (int val)
     {
-        this->val=val;
-        this->n_pointer=NULL;
+        this->val = val; 
+        this->n_pointer = NULL; 
     }
-
 };
 
-// For user input
-void user_input(Node* &head, Node* &tail, int val)
-{
-    Node* insert_value= new Node(val);
-    if(head==NULL)
-    {
-        head = insert_value;
-        tail = insert_value;
+// Insert a new node at the tail
+void insert_tail(Node*& head, int value) {
+    Node* newNode = new Node(value);
+    if (head == NULL) {
+        head = newNode;
         return;
     }
-    tail->n_pointer = insert_value;
-    tail = tail->n_pointer;
+
+    Node* temp = head;
+    while (temp->n_pointer != NULL) {
+        temp = temp->n_pointer;
+    }
+    temp->n_pointer = newNode;
 }
 
-void duplicate_delete_unsorted(Node* &head)
-{
-    if (head == NULL)
-        return;
+// Remove duplicate elements
+void removeDuplicates(Node* head) {
+    if (head == NULL) return;
 
-    Node* curr = head;
-    while (curr != NULL && curr->n_pointer != NULL)
-    {
-        Node* prev = curr;
-        Node* temp = curr->n_pointer;
-
-        while (temp != NULL)
-        {
-            if (curr->val == temp->val)
-            {
-                prev->n_pointer = temp->n_pointer;
-                delete temp;
-                temp = prev->n_pointer; 
-            }
-            else
-            {
-                prev = temp;
-                temp = temp->n_pointer;
-            }
+    Node* current = head;
+    while (current != NULL && current->n_pointer != NULL) {
+        if (current->val == current->n_pointer->val) {
+            Node* duplicate = current->n_pointer;
+            current->n_pointer = current->n_pointer->n_pointer;
+            delete duplicate;
+        } else {
+            current = current->n_pointer;
         }
-
-        curr = curr->n_pointer; 
     }
 }
 
-
-// For Output
-void print_node(Node* head)
+void printList(Node* head) 
 {
-    Node* temp=head;
-    while(temp!=NULL)
-    {
-        cout<<temp->val<<" ";
-        temp=temp->n_pointer;
+    Node* temp = head;
+    while (temp != NULL) {
+        cout << temp->val << " ";
+        temp = temp->n_pointer;
     }
+    cout << endl;
 }
 
-int main()
-{
-    Node* Head=NULL;
-    Node* Tail=NULL;
+int main() {
+    Node* head = NULL;
+    Node* tail = NULL;
     while(true)
     {
         int value;
-        cin>>value;
-        if(value==-1)
+        cin >> value;
+        if(value== -1)
         {
             break;
         }
-
-        user_input(Head, Tail, value);
+        insert_tail(head, value);
     }
 
-    duplicate_delete_unsorted(Head);
-    print_node(Head);
-    
+    removeDuplicates(head);
+    printList(head);
+
     return 0;
 }
